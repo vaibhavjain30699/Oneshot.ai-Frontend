@@ -1,0 +1,14 @@
+.headerMain {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    background-color: #2a284d;
+    color: white;
+    justify-content: center;
+    font-size: 40px;
+    font-family: 'Zen Dots', cursive;
+    font-weight: bold;
+    /* padding: 8px 0 5px 0; */
+}

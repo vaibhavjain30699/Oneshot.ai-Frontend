@@ -1,5 +1,13 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
+}
+
+.appBody {
+  height: calc(100vh - 70px);
+  width: 100%;
+  background-image: linear-gradient(#e4e6f3, #9192ec);
+  overflow: auto;
+  box-sizing: border-box;
 }
 
 .App-logo {

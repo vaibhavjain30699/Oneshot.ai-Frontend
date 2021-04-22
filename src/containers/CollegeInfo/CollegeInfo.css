@@ -1,0 +1,50 @@
+.ciMain {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.ciBody {
+    padding-top: 30px;
+    box-sizing: border-box;
+    padding-bottom: 30px;
+}
+
+.ciInfoBody{
+    width: 100%;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.ciInstiName {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+.ciHeading {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 30px;
+    /* font-weight: 800; */
+    font-family: 'Lobster', cursive;
+
+}
+
+.ciModal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.ciUserLogo {
+    width: 100%;
+    margin-bottom: 20px;
+}

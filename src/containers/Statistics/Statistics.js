@@ -132,9 +132,6 @@ const Statistics = (props) => {
                                                 "element:click",
                                                 (...args) => {
                                                     const res = { ...args };
-                                                    console.log(
-                                                        res[0].data.data
-                                                    );
                                                     setModalTitle(
                                                         res[0].data.data.title
                                                     );
@@ -173,9 +170,6 @@ const Statistics = (props) => {
                                                 "element:click",
                                                 (...args) => {
                                                     const res = { ...args };
-                                                    console.log(
-                                                        res[0].data.data
-                                                    );
                                                     setModalTitle(
                                                         res[0].data.data.title
                                                     );

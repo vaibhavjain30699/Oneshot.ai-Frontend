@@ -15,16 +15,12 @@ const CollegeInfo = (props) => {
     const [stuList, setStuList] = useState([]);
     const [similarClg, setSimilarClg] = useState([]);
 
-    const path = window.location.pathname.split("/");
-    const clgId = path[path.length - 1];
-
     useEffect(() => {
         setClgInfo({});
-        setStuList([]);
-        setSimilarClg([]);
         const baseUrlInfo = `${config.baseUrl}fetchCollegeDetails/byID`;
-        const baseUrlStu = `${config.baseUrl}fetchCollegeDetails/students`;
-        const baseUrlClg = `${config.baseUrl}fetchSimilarColleges`;
+
+        const path = window.location.pathname.split("/");
+        const clgId = path[path.length - 1];
 
         const reqBody = {
             id: clgId,
@@ -37,6 +33,18 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
+    }, [setClgInfo]);
+
+    useEffect(() => {
+        setStuList([]);
+        const baseUrlStu = `${config.baseUrl}fetchCollegeDetails/students`;
+
+        const path = window.location.pathname.split("/");
+        const clgId = path[path.length - 1];
+
+        const reqBody = {
+            id: clgId,
+        };
         axios
             .post(baseUrlStu, reqBody)
             .then((res) => {
@@ -52,6 +60,18 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
+    }, [setStuList]);
+
+    useEffect(() => {
+        setSimilarClg([]);
+        const baseUrlClg = `${config.baseUrl}fetchSimilarColleges`;
+
+        const path = window.location.pathname.split("/");
+        const clgId = path[path.length - 1];
+
+        const reqBody = {
+            id: clgId,
+        };
         axios
             .post(baseUrlClg, reqBody)
             .then((res) => {
@@ -66,7 +86,7 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [setClgInfo, clgId, setStuList, setSimilarClg]);
+    }, [setSimilarClg]);
 
     const columns = [
         {

@@ -1,5 +1,6 @@
 const config = {
-    baseUrl: "http://dcbd3530e81b.ngrok.io/",
+    baseUrl: "https://oneshot-backend1.herokuapp.com/",
+    // baseUrl: "http://393520c38879.ngrok.io/",
 };
 
 export default config;

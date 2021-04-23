@@ -14,6 +14,8 @@ const CollegeInfo = (props) => {
     const [clgInfo, setClgInfo] = useState({});
     const [stuList, setStuList] = useState([]);
     const [similarClg, setSimilarClg] = useState([]);
+    const [loadingStu, setLoadingStu] = useState(false);
+    const [loadingClg, setLoadingClg] = useState(false);
 
     const path = window.location.pathname.split("/");
     const clgId = path[path.length - 1];
@@ -37,6 +39,7 @@ const CollegeInfo = (props) => {
 
     useEffect(() => {
         setStuList([]);
+        setLoadingStu(true);
         const baseUrlStu = `${config.baseUrl}fetchCollegeDetails/students`;
 
         const reqBody = {
@@ -53,15 +56,17 @@ const CollegeInfo = (props) => {
                     stuData.push({ ...resData[i - 1], eno: i, key: i });
                 }
                 setStuList(stuData);
+                setLoadingStu(false);
             })
             .catch((err) => {
                 console.log(err);
+                setLoadingStu(false);
             });
     }, [setStuList, clgId]);
 
     useEffect(() => {
-        console.log("sim");
         setSimilarClg([]);
+        setLoadingClg(true);
         const baseUrlClg = `${config.baseUrl}fetchSimilarColleges`;
 
         const reqBody = {
@@ -77,9 +82,11 @@ const CollegeInfo = (props) => {
                     clgData.push({ ...resData[i - 1], key: i });
                 }
                 setSimilarClg(clgData);
+                setLoadingClg(false);
             })
             .catch((err) => {
                 console.log(err);
+                setLoadingClg(false);
             });
     }, [setSimilarClg, clgId]);
 
@@ -195,39 +202,51 @@ const CollegeInfo = (props) => {
                             </Col>
                         </Row>
                         <div className="ciHeading">Student List</div>
-                        <Table
-                            columns={columns}
-                            tableLayout="fixed"
-                            dataSource={stuList}
-                            pagination={{ pageSize: 10 }}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                    onClick: (event) => {
-                                        setModalData(record);
-                                        openModal();
-                                    },
-                                };
-                            }}
-                            style={{ cursor: "pointer" }}
-                        />
+                        {loadingStu ? (
+                            <div className="ciSpinner">
+                                <Spin size="large" />
+                            </div>
+                        ) : (
+                            <Table
+                                columns={columns}
+                                tableLayout="fixed"
+                                dataSource={stuList}
+                                pagination={{ pageSize: 10 }}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                        onClick: (event) => {
+                                            setModalData(record);
+                                            openModal();
+                                        },
+                                    };
+                                }}
+                                style={{ cursor: "pointer" }}
+                            />
+                        )}
                         <div className="ciHeading">Similar Colleges</div>
-                        <Table
-                            columns={columnsClg}
-                            tableLayout="fixed"
-                            dataSource={similarClg}
-                            pagination={{ pageSize: 10 }}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                    onClick: (event) => {
-                                        // console.log(record);
-                                        props.history.push(
-                                            `/institute/${record._id}`
-                                        );
-                                    },
-                                };
-                            }}
-                            style={{ cursor: "pointer" }}
-                        />
+                        {loadingStu ? (
+                            <div className="ciSpinner">
+                                <Spin size="large" />
+                            </div>
+                        ) : (
+                            <Table
+                                columns={columnsClg}
+                                tableLayout="fixed"
+                                dataSource={similarClg}
+                                pagination={{ pageSize: 10 }}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                        onClick: (event) => {
+                                            // console.log(record);
+                                            props.history.push(
+                                                `/institute/${record._id}`
+                                            );
+                                        },
+                                    };
+                                }}
+                                style={{ cursor: "pointer" }}
+                            />
+                        )}
                     </div>
                 )}
                 <Modal

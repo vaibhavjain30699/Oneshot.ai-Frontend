@@ -15,12 +15,12 @@ const CollegeInfo = (props) => {
     const [stuList, setStuList] = useState([]);
     const [similarClg, setSimilarClg] = useState([]);
 
+    const path = window.location.pathname.split("/");
+    const clgId = path[path.length - 1];
+
     useEffect(() => {
         setClgInfo({});
         const baseUrlInfo = `${config.baseUrl}fetchCollegeDetails/byID`;
-
-        const path = window.location.pathname.split("/");
-        const clgId = path[path.length - 1];
 
         const reqBody = {
             id: clgId,
@@ -33,14 +33,11 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [setClgInfo]);
+    }, [setClgInfo, clgId]);
 
     useEffect(() => {
         setStuList([]);
         const baseUrlStu = `${config.baseUrl}fetchCollegeDetails/students`;
-
-        const path = window.location.pathname.split("/");
-        const clgId = path[path.length - 1];
 
         const reqBody = {
             id: clgId,
@@ -60,14 +57,12 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [setStuList]);
+    }, [setStuList, clgId]);
 
     useEffect(() => {
+        console.log("sim");
         setSimilarClg([]);
         const baseUrlClg = `${config.baseUrl}fetchSimilarColleges`;
-
-        const path = window.location.pathname.split("/");
-        const clgId = path[path.length - 1];
 
         const reqBody = {
             id: clgId,
@@ -86,7 +81,7 @@ const CollegeInfo = (props) => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [setSimilarClg]);
+    }, [setSimilarClg, clgId]);
 
     const columns = [
         {
@@ -131,7 +126,7 @@ const CollegeInfo = (props) => {
         setShowModal(true);
     };
 
-    console.log(clgInfo, stuList, similarClg);
+    // console.log(clgInfo, stuList, similarClg);
 
     return (
         <div className="ciMain">

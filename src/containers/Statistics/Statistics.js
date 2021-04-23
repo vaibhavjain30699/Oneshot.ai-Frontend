@@ -1,44 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "@material-ui/core";
 import { Col, Modal, Row, Spin } from "antd";
 import { Pie, Bar } from "@ant-design/charts";
+import axios from "axios";
 
 import "./Statistics.css";
+import config from "../../config";
 
 const Statistics = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState([]);
-    const [modalTitle, setModalTitle] = useState("")
+    const [modalTitle, setModalTitle] = useState("");
+    const [stateList, setStateList] = useState([]);
+    const [courseList, setCourseList] = useState([]);
 
-    var pieData = [
-        {
-            type: "分类一",
-            value: 27,
-        },
-        {
-            type: "分类二",
-            value: 25,
-        },
-        {
-            type: "分类三",
-            value: 18,
-        },
-        {
-            type: "分类四",
-            value: 15,
-        },
-        {
-            type: "分类五",
-            value: 10,
-        },
-        {
-            type: "其他",
-            value: 5,
-        },
-    ];
+    useEffect(() => {
+        const baseUrlState = `${config.baseUrl}fetchStats/States`;
+        const baseUrlCourse = `${config.baseUrl}fetchStats/Courses`;
+
+        axios
+            .post(baseUrlState)
+            .then((res) => {
+                const resData = res.data;
+                var state = [];
+                var i = 0;
+                for (i = 0; i < resData.length; i++) {
+                    state.push({
+                        ...resData[i],
+                        type: resData[i].title,
+                        value: resData[i]["colleges"].length,
+                    });
+                }
+                setStateList(state);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .post(baseUrlCourse)
+            .then((res) => {
+                const resData = res.data;
+                var course = [];
+                var i = 0;
+                for (i = 0; i < resData.length; i++) {
+                    course.push({
+                        ...resData[i],
+                        value: resData[i]["colleges"].length,
+                    });
+                }
+                setCourseList(course);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [setStateList, setCourseList]);
+
     var pieConfig = {
         appendPadding: 10,
-        data: pieData,
+        data: stateList,
         angleField: "value",
         colorField: "type",
         radius: 1,
@@ -72,43 +92,16 @@ const Statistics = (props) => {
         legend: false,
     };
 
-    var barData = [
-        {
-            year: "1951 年",
-            value: 38,
-        },
-        {
-            year: "1952 年",
-            value: 52,
-        },
-        {
-            year: "1956 年",
-            value: 61,
-        },
-        {
-            year: "1957 年",
-            value: 145,
-        },
-        {
-            year: "1958 年",
-            value: 48,
-        },
-    ];
     var barConfig = {
-        data: barData,
+        data: courseList,
         xField: "value",
-        yField: "year",
-        seriesField: "year",
+        yField: "title",
+        seriesField: "title",
         legend: false,
     };
 
     const closeModal = () => {
         setShowModal(false);
-    };
-
-    const openModal = () => {
-        setShowModal(true);
-        setModalData([]);
     };
 
     return (
@@ -129,16 +122,32 @@ const Statistics = (props) => {
                         </Col>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <div className="stCard">
-                                <Pie
-                                    {...pieConfig}
-                                    onReady={(plot) => {
-                                        plot.on("element:click", (...args) => {
-                                            const res = { ...args };
-                                            console.log(res[0].data.data);
-                                            setShowModal(true);
-                                        });
-                                    }}
-                                />
+                                {stateList.length === 0 ? (
+                                    <Spin size="large" />
+                                ) : (
+                                    <Pie
+                                        {...pieConfig}
+                                        onReady={(plot) => {
+                                            plot.on(
+                                                "element:click",
+                                                (...args) => {
+                                                    const res = { ...args };
+                                                    console.log(
+                                                        res[0].data.data
+                                                    );
+                                                    setModalTitle(
+                                                        res[0].data.data.title
+                                                    );
+                                                    setModalData(
+                                                        res[0].data.data
+                                                            .colleges
+                                                    );
+                                                    setShowModal(true);
+                                                }
+                                            );
+                                        }}
+                                    />
+                                )}
                             </div>
                         </Col>
                     </Row>
@@ -154,16 +163,32 @@ const Statistics = (props) => {
                         </Col>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <div className="stCard">
-                                <Bar
-                                    {...barConfig}
-                                    onReady={(plot) => {
-                                        plot.on("element:click", (...args) => {
-                                            const res = { ...args };
-                                            console.log(res[0].data.data);
-                                            setShowModal(true);
-                                        });
-                                    }}
-                                />
+                                {courseList.length === 0 ? (
+                                    <Spin size="large" />
+                                ) : (
+                                    <Bar
+                                        {...barConfig}
+                                        onReady={(plot) => {
+                                            plot.on(
+                                                "element:click",
+                                                (...args) => {
+                                                    const res = { ...args };
+                                                    console.log(
+                                                        res[0].data.data
+                                                    );
+                                                    setModalTitle(
+                                                        res[0].data.data.title
+                                                    );
+                                                    setModalData(
+                                                        res[0].data.data
+                                                            .colleges
+                                                    );
+                                                    setShowModal(true);
+                                                }
+                                            );
+                                        }}
+                                    />
+                                )}
                             </div>
                         </Col>
                     </Row>
@@ -176,7 +201,22 @@ const Statistics = (props) => {
                     closable={false}
                     maskClosable={true}
                 >
-                    <Spin size="large" />
+                    {modalData.map((clg, key) => {
+                        return (
+                            <div key={key} className="stClgList">
+                                <div
+                                    className="stClg"
+                                    onClick={() => {
+                                        props.history.push(
+                                            `/institute/${clg._id}`
+                                        );
+                                    }}
+                                >
+                                    {clg.Name}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </Modal>
             </Container>
         </div>
